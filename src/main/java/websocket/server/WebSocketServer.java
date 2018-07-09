@@ -1,6 +1,7 @@
 package websocket.server;
 
 import javax.websocket.OnMessage;
+import javax.websocket.OnClose;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.Session;
 
@@ -14,6 +15,12 @@ import java.io.*;
 @ServerEndpoint("/echo")
 public class WebSocketServer {
 
+//  @OnClose
+//  public void closeReceiver(){
+//    
+//
+//  }  
+
   @OnMessage
   public String echo(String message, Session session) {
     System.out.println(message);
@@ -25,7 +32,9 @@ public class WebSocketServer {
     }
       
     if(data[0].equals("r")){
-      receiveOSC(data[1], session);
+      //receiveOSC(data[1], session);
+      OSCThread ot = new OSCThread(data[1], session);
+      ot.start();
     }
     return message;
   }
@@ -76,6 +85,45 @@ public class WebSocketServer {
     receiver.addListener(message, listener);
     receiver.startListening();
     //receiver.close();
+  }
+}
+
+class OSCThread extends Thread{
+  private String message;
+  private Session session;
+  
+  public OSCThread(String message, Session session){
+    this.message = message;
+    this.session = session;
+  }
+
+  public void run(){
+    OSCPortIn receiver = null;
+    try{
+      receiver = new OSCPortIn(8000);
+    }catch(SocketException e2){
+      e2.printStackTrace();
+    }
+    OSCListener listener = new OSCListener(){
+      public void acceptMessage(Date time, OSCMessage message){
+        System.out.println(message.getAddress());
+        for(Object ob : message.getArguments()){
+          System.out.println((String) ob);
+          session.getOpenSessions().forEach(s -> {
+            s.getAsyncRemote().sendText((String) ob);
+          });
+        }
+      }
+    };
+    receiver.addListener(this.message, listener);
+    while(true){
+      receiver.startListening();
+      try{
+        Thread.sleep(1000);
+      }catch (InterruptedException e){
+      }
+      receiver.close();
+    }
   }
 }
 
