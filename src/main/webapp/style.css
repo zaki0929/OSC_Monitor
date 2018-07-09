@@ -1,0 +1,29 @@
+header            {color: #5B5B5B;
+                  padding: 4px;
+                  margin-bottom: 30px;}
+
+header a          {text-decoration: none;}
+
+header a:link     {color: #1C1C1C;}
+header a:visited  {color: #1C1C1C;}
+header a:hover    {color: #585858;}
+
+input             {color: #5B5B5B;
+                  border: solid 1px #5B5B5B;
+                  font-size: 20px;
+                  padding: 10px;
+                  width: 300px;
+                  height: 20px}
+
+#send             {display: inline-block;
+                  color: #FFFFFF;
+                  background-color: #FC9D9D;
+                  text-align: center;
+                  font-size: 20px;
+                  padding-top: 8.5px;
+                  padding-bottom: 13.5px;
+                  padding-left: 10px;
+                  padding-right: 10px;
+                  margin-left: 20px;
+                  width: 60px;
+                  height: 20px;}

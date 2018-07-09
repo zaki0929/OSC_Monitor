@@ -1,7 +1,13 @@
 apply plugin: 'application'
+apply plugin: 'war'
 
-repositories {jcenter()}
+war.baseName = 'websocket'
+
+repositories {
+  jcenter()
+}
 
 dependencies {
   compile 'junit:junit:4.12'
+  providedCompile 'javax.websocket:javax.websocket-api:1.1'
 }
