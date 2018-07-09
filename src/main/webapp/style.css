@@ -27,3 +27,16 @@ input             {color: #5B5B5B;
                   margin-left: 20px;
                   width: 60px;
                   height: 20px;}
+
+#receive          {display: inline-block;
+                  color: #FFFFFF;
+                  background-color: #AAD6EC;
+                  text-align: center;
+                  font-size: 20px;
+                  padding-top: 8.5px;
+                  padding-bottom: 13.5px;
+                  padding-left: 10px;
+                  padding-right: 10px;
+                  margin-left: 20px;
+                  width: 60px;
+                  height: 20px;}

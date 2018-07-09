@@ -3,30 +3,48 @@ $(function(){
   var ws = new WebSocket(url);
 
   ws.onmessage = function(receive){
-    $('#message').text(receive.data);
+    $('#log').text(receive.data);
+    //$('#log').append($('<li>').text(recive.data));
+    //window.scrollTo(0, document.body.scrollHeight);
   };
 
   ws.onopen = function(){
     //ws.send('Hello WebSocket');
   }
 
-  $(function(){
-    $('#send').click(function(){
-      var address = $('#address').val();
-      var message = $('#message').val();
-      var data = address + ', ' + message;
-      ws.send(data);
-    });
-
-    $('#message').keypress(function(e){
-      if ( e.which == 13 ) {
-        var address = $('#address').val();
-        var message = $('#message').val();
-        var data = address + ', ' + message;
-        ws.send(data);
-        return false;
-      }
-    });
+  // Sender
+  $('#send').click(function(){
+    var address = $('#address_s').val();
+    var message = $('#message_s').val();
+    var data = 's: ' + address + ', ' + message;
+    ws.send(data);
   });
+
+  $('#message_s').keypress(function(e){
+    if ( e.which == 13 ) {
+      var address = $('#address_s').val();
+      var message = $('#message_s').val();
+      var data = 's: ' + address + ', ' + message;
+      ws.send(data);
+      return false;
+    }
+  });
+
+  // Receiver
+  $('#receive').click(function(){
+    var address = $('#address_r').val();
+    var data = 'r: ' + address;
+    ws.send(data);
+  });
+
+  $('#address_r').keypress(function(e){
+    if ( e.which == 13 ) {
+      var address = $('#address_r').val();
+      var data = 'r: ' + address;
+      ws.send(data);
+      return false;
+    }
+  });
+  
 
 });
