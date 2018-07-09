@@ -16,12 +16,13 @@ public class WebSocketServer {
   public String echo(String message) {
     System.out.println(message);
     sendOSC(message);
-    System.out.println(message);
     return message;
   }
 
   public void sendOSC(String message) {
-    String[] data = message.split("-");
+    String[] data = message.split(", ");
+    System.out.println(data[0]);
+    System.out.println(data[1]);
     
     // OSC Sender
     OSCPortOut sender = null;
@@ -32,11 +33,9 @@ public class WebSocketServer {
     }
 
     ArrayList<Object> chat = new ArrayList<Object>();
-    //chat.add(data[1]);
-    chat.add(message);
+    chat.add(data[1]);
 
-    //OSCMessage msg = new OSCMessage(data[0], chat);
-    OSCMessage msg = new OSCMessage("/greet/hello", chat);
+    OSCMessage msg = new OSCMessage(data[0], chat);
     try{
       sender.send(msg);
       System.out.println("Sended!");

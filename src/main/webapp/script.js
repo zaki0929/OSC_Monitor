@@ -7,14 +7,14 @@ $(function(){
   };
 
   ws.onopen = function(){
-    ws.send('Hello WebSocket');
+    //ws.send('Hello WebSocket');
   }
 
   $(function(){
     $('#send').click(function(){
       var address = $('#address').val();
       var message = $('#message').val();
-      var data = address + '-' + message;
+      var data = address + ', ' + message;
       ws.send(data);
     });
 
@@ -22,7 +22,7 @@ $(function(){
       if ( e.which == 13 ) {
         var address = $('#address').val();
         var message = $('#message').val();
-        var data = address + '-' + message;
+        var data = address + ', ' + message;
         ws.send(data);
         return false;
       }
