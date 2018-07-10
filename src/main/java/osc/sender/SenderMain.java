@@ -10,7 +10,7 @@ public class SenderMain{
 
     OSCPortOut sender = null;
     try{
-      sender = new OSCPortOut(InetAddress.getLocalHost(), 8000);
+      sender = new OSCPortOut(InetAddress.getLocalHost(), 9000);
     }catch(Exception ex){
       ex.printStackTrace();
     }

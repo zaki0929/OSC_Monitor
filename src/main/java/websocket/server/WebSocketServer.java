@@ -15,38 +15,29 @@ import java.io.*;
 @ServerEndpoint("/echo")
 public class WebSocketServer {
 
-//  @OnClose
-//  public void closeReceiver(){
-//    
-//
-//  }  
-
   @OnMessage
-  public String echo(String message, Session session) {
+  public void echo(String message, Session session) {
     System.out.println(message);
 
+    // クライアントから届いた指示が, Sender か Receiver のどちらへ向けたものか調べる
     String[] data = message.split(": ");
-
-    if(data[0].equals("s")){
-      sendOSC(data[1]);
+    if(data[0].equals("s")){         // Sender への指示だった場合
+      sendOSC(data[1], session);              // OSC を送信するメソッドを実行
     }
-      
-    if(data[0].equals("r")){
-      //receiveOSC(data[1], session);
-      OSCThread ot = new OSCThread(data[1], session);
-      ot.start();
+    if(data[0].equals("r")){         // Receiver への指示だった場合
+      receiveOSC(data[1], session);  // OSC を受信するメソッドの実行
     }
-    return message;
   }
 
-  public void sendOSC(String message) {
+  // OSC を送信するメソッド
+  public void sendOSC(String message, Session session) {
     String[] data = message.split(", ");
     
     OSCPortOut sender = null;
     try{
-      sender = new OSCPortOut(InetAddress.getLocalHost(), 8000);
-    }catch(Exception ex){
-      ex.printStackTrace();
+      sender = new OSCPortOut(InetAddress.getLocalHost(), 9000);
+    }catch(Exception e){
+      e.printStackTrace();
     }
 
     ArrayList<Object> chat = new ArrayList<Object>();
@@ -55,6 +46,14 @@ public class WebSocketServer {
     OSCMessage msg = new OSCMessage(data[0], chat);
     try{
       sender.send(msg);
+      for(Object ob : msg.getArguments()){
+          System.out.println((String) ob);
+        try{
+          session.getBasicRemote().sendText("Send: " + msg.getAddress() + ": " + (String) ob);
+        }catch(Exception e){
+          e.printStackTrace();
+        }
+      }
       System.out.println("Sended!");
     }catch(Exception e){
       e.printStackTrace();
@@ -62,68 +61,36 @@ public class WebSocketServer {
     sender.close();
   }
 
+  // OSC を受信するメソッド
   public void receiveOSC(String message, Session session){
     OSCPortIn receiver = null;
     try{
-      receiver = new OSCPortIn(8000);
-    }catch(SocketException e2){
-      e2.printStackTrace();
+      receiver = new OSCPortIn(9000);
+    }catch(SocketException e){
+      e.printStackTrace();
     }
 
     OSCListener listener = new OSCListener(){
-      public void acceptMessage(Date time, OSCMessage message){
-        System.out.println(message.getAddress());
-        for(Object ob : message.getArguments()){
-          System.out.println((String) ob);
-          session.getOpenSessions().forEach(s -> {
-            s.getAsyncRemote().sendText((String) ob);
-          });
+      public void acceptMessage(Date time, OSCMessage msg){
+        for(Object ob : msg.getArguments()){
+	  try{
+            try{
+              Thread.sleep(100);
+            }catch (InterruptedException e){
+              e.printStackTrace();
+            }
+            session.getBasicRemote().sendText("Receive: " + msg.getAddress() + ": " + (String) ob);
+	  }catch(Exception e){
+            e.printStackTrace();
+	  }
         }
+        System.out.println("Received!");
       }
     };
 
     receiver.addListener(message, listener);
     receiver.startListening();
+    //receiver.stopListening();
     //receiver.close();
   }
 }
-
-class OSCThread extends Thread{
-  private String message;
-  private Session session;
-  
-  public OSCThread(String message, Session session){
-    this.message = message;
-    this.session = session;
-  }
-
-  public void run(){
-    OSCPortIn receiver = null;
-    try{
-      receiver = new OSCPortIn(8000);
-    }catch(SocketException e2){
-      e2.printStackTrace();
-    }
-    OSCListener listener = new OSCListener(){
-      public void acceptMessage(Date time, OSCMessage message){
-        System.out.println(message.getAddress());
-        for(Object ob : message.getArguments()){
-          System.out.println((String) ob);
-          session.getOpenSessions().forEach(s -> {
-            s.getAsyncRemote().sendText((String) ob);
-          });
-        }
-      }
-    };
-    receiver.addListener(this.message, listener);
-    while(true){
-      receiver.startListening();
-      try{
-        Thread.sleep(1000);
-      }catch (InterruptedException e){
-      }
-      receiver.close();
-    }
-  }
-}
-

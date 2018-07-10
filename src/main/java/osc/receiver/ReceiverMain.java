@@ -8,7 +8,7 @@ public class ReceiverMain{
 
     OSCPortIn receiver = null;
     try{
-      receiver = new OSCPortIn(8000);
+      receiver = new OSCPortIn(9000);
     }catch(SocketException e2){
       e2.printStackTrace();
     }

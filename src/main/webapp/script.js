@@ -3,9 +3,7 @@ $(function(){
   var ws = new WebSocket(url);
 
   ws.onmessage = function(receive){
-    $('#log').text(receive.data);
-    //$('#log').append($('<li>').text(recive.data));
-    //window.scrollTo(0, document.body.scrollHeight);
+    $('#log').prepend(receive.data + "<br/>");
   };
 
   ws.onopen = function(){
