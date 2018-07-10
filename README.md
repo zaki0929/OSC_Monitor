@@ -1,6 +1,9 @@
 # OSC Monitor
 Gradle project which can send and receive arbitrary OSC on Websocket server.
 
+## Demo
+* [OSC Monitor - YouTube](https://youtu.be/F-RZwj9cGRc)
+
 ## Requirements
 * Gradle
   * Gradle 4.8.1
@@ -22,4 +25,4 @@ For example, if you are using Tomcat 8 with Ubuntu, do as follows.
 ```
 sudo cp -r build/libs/websocket.war /var/lib/tomcat8/webapps/.
 ```
-Finally, access http://<your IP address>:8080/websocket/ from the browser.
+Finally, access http://&lt;your IP address&gt;:8080/websocket/ from the browser.
