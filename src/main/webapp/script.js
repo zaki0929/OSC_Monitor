@@ -1,5 +1,6 @@
 $(function(){
-  var url = 'ws://' + location.hostname + ':8080/websocket/echo';
+  //var url = 'ws://' + location.hostname + ':8080/websocket/echo';
+  var url = 'ws://localhost:8080/websocket/echo';
   var ws = new WebSocket(url);
 
   ws.onmessage = function(receive){

@@ -1,4 +1,3 @@
-apply plugin: 'application'
 apply plugin: 'war'
 
 war.baseName = 'websocket'
@@ -10,4 +9,8 @@ repositories {
 dependencies {
   compile 'junit:junit:4.12'
   providedCompile 'javax.websocket:javax.websocket-api:1.1'
+}
+
+task run(dependsOn: 'war') << {
+  println 'Please deploy the generated war file on path build/libs/websocket.war'
 }
