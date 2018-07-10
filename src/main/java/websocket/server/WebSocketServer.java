@@ -1,6 +1,7 @@
 package websocket.server;
 
 import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.OnClose;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.Session;
@@ -14,18 +15,34 @@ import java.io.*;
 
 @ServerEndpoint("/echo")
 public class WebSocketServer {
+  OSCReceiver receiver;
 
+  // 接続が確立したときに実行
+  @OnOpen
+  public void onOpen(){
+    receiver = new OSCReceiver(); 
+  }
+
+  // 接続が切断されたときに実行
+  @OnClose
+  public void onClose(Session session){
+    if(receiver.isRun){
+      receiver.stopReceive(session);
+    }
+  }
+
+  // メッセージを受信したときに実行
   @OnMessage
   public void echo(String message, Session session) {
-    System.out.println(message);
-
     // クライアントから届いた指示が, Sender か Receiver のどちらへ向けたものか調べる
     String[] data = message.split(": ");
     if(data[0].equals("s")){         // Sender への指示だった場合
       sendOSC(data[1], session);              // OSC を送信するメソッドを実行
     }
     if(data[0].equals("r")){         // Receiver への指示だった場合
-      receiveOSC(data[1], session);  // OSC を受信するメソッドの実行
+      if(!receiver.isRun){
+        receiver.startReceive(data[1], session);  // OSC を受信するメソッドを実行
+      }
     }
   }
 
@@ -60,10 +77,21 @@ public class WebSocketServer {
     }
     sender.close();
   }
+}
 
-  // OSC を受信するメソッド
-  public void receiveOSC(String message, Session session){
-    OSCPortIn receiver = null;
+// OSC を受信するためのクラス 
+class OSCReceiver{
+  OSCPortIn receiver;
+  boolean isRun;
+
+  public OSCReceiver(){
+    isRun = false;
+  }
+
+  // 受信を開始するためのメソッド
+  public void startReceive(String message, Session session){
+    isRun = true;
+    receiver = null;
     try{
       receiver = new OSCPortIn(9000);
     }catch(SocketException e){
@@ -87,10 +115,24 @@ public class WebSocketServer {
         System.out.println("Received!");
       }
     };
-
     receiver.addListener(message, listener);
     receiver.startListening();
-    //receiver.stopListening();
-    //receiver.close();
+    try{
+      session.getBasicRemote().sendText("Started up receiver: " + message);
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+  }
+
+  // 受信を終了するためのメソッド
+  public void stopReceive(Session session){
+    receiver.stopListening();
+    receiver.close();
+    try{
+      session.getBasicRemote().sendText("Shut down receiver");
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+    isRun = false;
   }
 }
