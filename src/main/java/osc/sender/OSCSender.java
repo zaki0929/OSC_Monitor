@@ -9,7 +9,7 @@ import com.illposed.osc.*;
 
 public class  OSCSender{
   // OSC を送信するメソッド
-  public void sendOSC(String message, Session session) {
+  public void sendOSC(String message, Session session){
     String[] data = message.split(", ");
     
     OSCPortOut sender = null;
@@ -26,7 +26,6 @@ public class  OSCSender{
     try{
       sender.send(msg);
       for(Object ob : msg.getArguments()){
-          System.out.println((String) ob);
         try{
           session.getBasicRemote().sendText("Send: " + msg.getAddress() + ": " + (String) ob);
         }catch(Exception e){

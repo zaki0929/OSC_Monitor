@@ -34,7 +34,7 @@ public class WebSocketServer {
 
   // メッセージを受信したときに実行
   @OnMessage
-  public void echo(String message, Session session) {
+  public void echo(String message, Session session){
     // クライアントから届いた指示が, Sender か Receiver のどちらへ向けたものか調べる
     String[] data = message.split(": ");
     if(data[0].equals("s")){                      // Sender への指示だった場合
