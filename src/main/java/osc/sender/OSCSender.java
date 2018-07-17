@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.io.*;
 import com.illposed.osc.*;
 
+// OSC の送信用クラス
 public class  OSCSender{
   // OSC を送信するメソッド
   public void sendOSC(String message, Session session){

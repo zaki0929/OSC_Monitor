@@ -6,6 +6,7 @@ import java.util.Date;
 import java.io.*;
 import com.illposed.osc.*;
 
+// OSC の受信用クラス
 public class OSCReceiver{
   OSCPortIn receiver;
   public boolean isRun;
