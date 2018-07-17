@@ -19,10 +19,16 @@ $(function(){
   // OSC の Sender への命令を WebSocket サーバに送信する関数
   function ws_send_s(){
     if(!$.isBlank($('#address_s').val()) && !$.isBlank($('#message_s').val())){
-      var address = $('#address_s').val();
-      var message = $('#message_s').val();
-      var data = 's: ' + address + ', ' + message;
-      ws.send(data);
+      if($('#address_s').val().indexOf('/') == 0){
+        var address = $('#address_s').val();
+        var message = $('#message_s').val();
+        var data = 's: ' + address + ', ' + message;
+        ws.send(data);
+      }else{
+        $('#log').prepend("Error: Please enter a character string beginning with \"/\" in the address field.<br/>");
+      }
+    }else{
+      $('#log').prepend("Error: There is a blank input field, please fill it.<br/>");
     }
   };
 
@@ -47,24 +53,28 @@ $(function(){
 
   // OSC の Receiver への命令を WebSocket サーバに送信する関数
   function ws_send_r(){
-    if(!$.isBlank($('#address_r').val())){
-      var address = $('#address_r').val();
-      var data = 'r: ' + address;
-      ws.send(data);
-    }
-  };
-
-  // OSC の Receiver への命令を WebSocket サーバに送信する関数に
-　// 待機処理を加えた関数
-  function ws_send_r_and_wait(){
-    if(!isWait && !$.isBlank($('#address_r').val())){
-      ws_send_r(); 
-      $('#receive').text("wait");
-      isWait = true;
-      setTimeout(function(){
-        $('#receive').text("receive");
-        isWait = false;
-      },14000);
+    if(!isWait){
+      if(!$.isBlank($('#address_r').val())){
+        if($('#address_r').val().indexOf('/') == 0){
+          var address = $('#address_r').val();
+          var data = 'r: ' + address;
+          ws.send(data);
+          
+          // 連投するとクラッシュするので待機させる
+          $('#receive').text("wait");
+          isWait = true;
+          setTimeout(function(){
+            $('#receive').text("receive");
+            isWait = false;
+          },14000);
+        }else{
+          $('#log').prepend("Error: Please enter a character string beginning with \"/\" in the address field.<br/>");
+        }
+      }else{
+        $('#log').prepend("Error: There is a blank input field, please fill it.<br/>");
+      }
+    }else{
+      $('#log').prepend("Error: Please wait a few seconds.<br/>");
     }
   }
 
@@ -72,12 +82,12 @@ $(function(){
   var isWait = false;
 
   // receive ボタンをクリックしたときに実行
-  $('#receive').click(ws_send_r_and_wait);
+  $('#receive').click(ws_send_r);
 
   // アドレス入力欄でエンターキーを押したときに実行
   $('#address_r').keypress(function(e){
     if(e.which == 13){
-      ws_send_r_and_wait();
+      ws_send_r();
     }
   });
 
