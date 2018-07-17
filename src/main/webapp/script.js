@@ -25,10 +25,10 @@ $(function(){
         var data = 's: ' + address + ', ' + message;
         ws.send(data);
       }else{
-        $('#log').prepend("Error: Please enter a character string beginning with \"/\" in the address field.<br/>");
+        $('#log').prepend("<font color=\"#E64552\">Error: Please enter a character string beginning with \"/\" in the address field.</font><br/>");
       }
     }else{
-      $('#log').prepend("Error: There is a blank input field, please fill it.<br/>");
+      $('#log').prepend("<font color=\"#E64552\">Error: There is a blank input field, please fill it.</font><br/>");
     }
   };
 
@@ -68,13 +68,13 @@ $(function(){
             isWait = false;
           },14000);
         }else{
-          $('#log').prepend("Error: Please enter a character string beginning with \"/\" in the address field.<br/>");
+          $('#log').prepend("<font color=\"#E64552\">Error: Please enter a character string beginning with \"/\" in the address field.</font><br/>");
         }
       }else{
-        $('#log').prepend("Error: There is a blank input field, please fill it.<br/>");
+        $('#log').prepend("<font color=\"#E64552\">Error: There is a blank input field, please fill it.</font><br/>");
       }
     }else{
-      $('#log').prepend("Error: Please wait a few seconds.<br/>");
+      $('#log').prepend("<font color=\"#E64552\">Error: Please wait a few seconds.</font><br/>");
     }
   }
 
