@@ -1,3 +1,7 @@
+body              {font-family: 'メイリオ',
+                  'Hiragino Kaku Gothic Pro',
+                  sans-serif;}
+
 header            {color: #5B5B5B;
                   padding: 4px;
                   margin-bottom: 30px;}
