@@ -23,6 +23,6 @@ gradle run
 Next, deploy the war file generated in the previous step.
 For example, if you are using Tomcat 8 with Ubuntu, do as follows.
 ```
-sudo cp -r build/libs/websocket.war /var/lib/tomcat8/webapps/.
+sudo cp -r build/libs/OSC-Monitor.war /var/lib/tomcat8/webapps/.
 ```
-Finally, access http://&lt;your IP address&gt;:8080/websocket/ from the browser.
+Finally, access http://&lt;your IP address&gt;:8080/OSC-Monitor/ from the browser.

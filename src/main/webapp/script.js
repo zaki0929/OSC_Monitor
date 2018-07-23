@@ -1,5 +1,5 @@
 $(function(){
-  var url = 'ws://' + location.hostname + ':8080/websocket/echo';
+  var url = 'ws://' + location.hostname + ':8080/OSC-Monitor/echo';
   var ws = new WebSocket(url);
 
   // WebSocket サーバからメッセージが届いたときに実行

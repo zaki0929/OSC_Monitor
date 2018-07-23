@@ -1,6 +1,6 @@
 apply plugin: 'war'
 
-war.baseName = 'websocket'
+war.baseName = 'OSC-Monitor'
 
 repositories {
   jcenter()
@@ -12,5 +12,5 @@ dependencies {
 }
 
 task run(dependsOn: 'war') << {
-  println 'Please deploy the generated war file on path build/libs/websocket.war'
+  println 'Please deploy the generated war file on path build/libs/OSC-Monitor.war'
 }
