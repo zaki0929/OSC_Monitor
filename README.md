@@ -1,8 +1,8 @@
 # OSC Monitor
-Gradle project which can send and receive arbitrary OSC on Websocket server.
+Gradle project which can send and receive arbitrary OSC on WebSocket server.
 
 ## Demo
-* [OSC Monitor - YouTube](https://youtu.be/F-RZwj9cGRc)
+* [OSC Monitor - YouTube](https://youtu.be/o1u4JCKA1pI)
 
 ## Requirements
 * Gradle
