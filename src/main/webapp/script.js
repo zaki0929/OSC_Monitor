@@ -66,26 +66,21 @@ $(function(){
   // OSC の Receiver への命令を WebSocket サーバに送信する関数
   function ws_send_r(){
     if(!isWait){
-      if(!$.isBlank($('#port_r').val()) && !$.isBlank($('#address_r').val())){
-        if($('#address_r').val().indexOf('/') == 0){
-          if(!isNaN($('#port_r').val())){
-            var port = $('#port_r').val();
-            var address = $('#address_r').val();
-            var data = 'r: ' + port + ', ' + address;
-            ws.send(data);
-            
-            // 連投するとクラッシュするので待機させる
-            $('#receive').text("wait");
-            isWait = true;
-            setTimeout(function(){
-              $('#receive').text("receive");
-              isWait = false;
-            },14000);
-          }else{
-            $('#log').prepend("<font color=\"#E64552\">Error: Please enter a number in the port number field.</font><br/>");
-          }
+      if(!$.isBlank($('#port_r').val())){
+        if(!isNaN($('#port_r').val())){
+          var port = $('#port_r').val();
+          var data = 'r: ' + port;
+          ws.send(data);
+          
+          // 連投するとクラッシュするので待機させる
+          $('#receive').text("wait");
+          isWait = true;
+          setTimeout(function(){
+            $('#receive').text("receive");
+            isWait = false;
+          },14000);
         }else{
-          $('#log').prepend("<font color=\"#E64552\">Error: Please enter a character string beginning with \"/\" in the address field.</font><br/>");
+          $('#log').prepend("<font color=\"#E64552\">Error: Please enter a number in the port number field.</font><br/>");
         }
       }else{
         $('#log').prepend("<font color=\"#E64552\">Error: There is a blank input field, please fill it.</font><br/>");
@@ -103,13 +98,6 @@ $(function(){
 
   // ポート番号入力欄でエンターキーを押したときに実行
   $('#port_r').keypress(function(e){
-    if(e.which == 13){
-      ws_send_r();
-    }
-  });
-
-  // アドレス入力欄でエンターキーを押したときに実行
-  $('#address_r').keypress(function(e){
     if(e.which == 13){
       ws_send_r();
     }
