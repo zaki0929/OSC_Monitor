@@ -17,10 +17,11 @@ public class OSCReceiver{
 
   // 受信を開始するためのメソッド
   public void startReceive(String message, Session session){
+    String[] data = message.split(", ");
     isRun = true;
     receiver = null;
     try{
-      receiver = new OSCPortIn(9000);
+      receiver = new OSCPortIn(Integer.parseInt(data[0]));
     }catch(SocketException e){
       e.printStackTrace();
     }
@@ -42,10 +43,10 @@ public class OSCReceiver{
         System.out.println("Received!");
       }
     };
-    receiver.addListener(message, listener);
+    receiver.addListener(data[1], listener);
     receiver.startListening();
     try{
-      session.getBasicRemote().sendText("Started up receiver: " + message);
+      session.getBasicRemote().sendText("Started up receiver: " + data[1]);
     }catch(Exception e){
       e.printStackTrace();
     }

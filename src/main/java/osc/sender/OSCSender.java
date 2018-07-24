@@ -13,17 +13,22 @@ public class  OSCSender{
   public void sendOSC(String message, Session session){
     String[] data = message.split(", ");
     
+   // port = Integer.parseInt(data[0])
+   // address = data[1]
+   // data = data[2]
+
+
     OSCPortOut sender = null;
     try{
-      sender = new OSCPortOut(InetAddress.getLocalHost(), 9000);
+      sender = new OSCPortOut(InetAddress.getLocalHost(), Integer.parseInt(data[0]));
     }catch(Exception e){
       e.printStackTrace();
     }
 
     ArrayList<Object> chat = new ArrayList<Object>();
-    chat.add(data[1]);
+    chat.add(data[2]);
 
-    OSCMessage msg = new OSCMessage(data[0], chat);
+    OSCMessage msg = new OSCMessage(data[1], chat);
     try{
       sender.send(msg);
       for(Object ob : msg.getArguments()){
