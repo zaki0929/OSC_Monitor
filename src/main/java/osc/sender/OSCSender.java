@@ -69,15 +69,25 @@ public class  OSCSender{
     }
   
     OSCMessage msg = new OSCMessage(data[1], chat);
+    String sender_obs = " ";
+    String sender_address = " ";
     try{
       sender.send(msg);
       for(Object ob : msg.getArguments()){
         try{
-          session.getBasicRemote().sendText("Send: " + msg.getAddress() + ": " + ob);
+          sender_obs += " ";
+          sender_obs += ob;
+          sender_address = msg.getAddress();
         }catch(Exception e){
           e.printStackTrace();
         }
       }
+      try{
+        session.getBasicRemote().sendText("send: " + sender_address + ":" + sender_obs);
+      }catch(Exception e){
+        e.printStackTrace();
+      }
+
       System.out.println("Sended!");
     }catch(Exception e){
       e.printStackTrace();

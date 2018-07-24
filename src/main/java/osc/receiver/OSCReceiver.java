@@ -44,6 +44,8 @@ public class OSCReceiver{
 
       OSCListener listener = new OSCListener(){
         public void acceptMessage(Date time, OSCMessage msg){
+          String receiver_obs = " ";
+          String receiver_address = " ";
           for(Object ob : msg.getArguments()){
             try{
               try{
@@ -51,10 +53,17 @@ public class OSCReceiver{
               }catch (InterruptedException e){
                 e.printStackTrace();
               }
-              session.getBasicRemote().sendText("Receive: " + msg.getAddress() + ": " +  ob);
+              receiver_obs += " ";
+              receiver_obs += ob;
+              receiver_address = msg.getAddress();
             }catch(Exception e){
               e.printStackTrace();
             }
+          }
+          try{
+            session.getBasicRemote().sendText("Receive: " + receiver_address + ":" + receiver_obs);
+          }catch(Exception e){
+            e.printStackTrace();
           }
           System.out.println("Received!");
         }
