@@ -15,39 +15,63 @@ public class OSCReceiver{
     isRun = false;
   }
 
+  // ポートが使える状態か確認
+  public boolean canUse(int port){
+    OSCPortIn ss = null;
+    boolean isOpen;
+    try{
+      ss = new OSCPortIn(port);
+      isOpen = true;
+    }catch(Exception e){
+      isOpen = false;
+    }finally{
+      if(ss!=null)try{ss.close();}catch(Exception e){}
+    }
+    return isOpen;
+  }
+
   // 受信を開始するためのメソッド
   public void startReceive(String message, Session session){
-    isRun = true;
-    receiver = null;
-    try{
-      receiver = new OSCPortIn(Integer.parseInt(message));
-    }catch(SocketException e){
-      e.printStackTrace();
-    }
+    int port = Integer.parseInt(message);
+    if(canUse(port)){
+      isRun = true;
+      receiver = null;
+      try{
+        receiver = new OSCPortIn(port);
+      }catch(SocketException e){
+        e.printStackTrace();
+      }
 
-    OSCListener listener = new OSCListener(){
-      public void acceptMessage(Date time, OSCMessage msg){
-        for(Object ob : msg.getArguments()){
-	  try{
+      OSCListener listener = new OSCListener(){
+        public void acceptMessage(Date time, OSCMessage msg){
+          for(Object ob : msg.getArguments()){
             try{
-              Thread.sleep(10);
-            }catch (InterruptedException e){
+              try{
+                Thread.sleep(10);
+              }catch (InterruptedException e){
+                e.printStackTrace();
+              }
+              session.getBasicRemote().sendText("Receive: " + msg.getAddress() + ": " +  ob);
+            }catch(Exception e){
               e.printStackTrace();
             }
-            session.getBasicRemote().sendText("Receive: " + msg.getAddress() + ": " + (String) ob);
-	  }catch(Exception e){
-            e.printStackTrace();
-	  }
+          }
+          System.out.println("Received!");
         }
-        System.out.println("Received!");
+      };
+      receiver.addListener("/*", listener);
+      receiver.startListening();
+      try{
+        session.getBasicRemote().sendText("Started up receiver on " + message);
+      }catch(Exception e){
+        e.printStackTrace();
       }
-    };
-    receiver.addListener("/*", listener);
-    receiver.startListening();
-    try{
-      session.getBasicRemote().sendText("Started up receiver on " + message);
-    }catch(Exception e){
-      e.printStackTrace();
+    }else{
+      try{
+        session.getBasicRemote().sendText("<font color=\"#E64552\">Error: Since port " + message + " is in use, please use another port.</font>");
+      }catch(Exception e){
+        e.printStackTrace();
+      }
     }
   }
 

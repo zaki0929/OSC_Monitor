@@ -38,6 +38,7 @@ public class  OSCSender{
   // OSC を送信するメソッド
   public void sendOSC(String message, Session session){
     String[] data = message.split(", ");
+    String[] msg_data = data[2].split(" ");
 
     OSCPortOut sender = null;
     try{
@@ -47,28 +48,31 @@ public class  OSCSender{
     }
 
     ArrayList<Object> chat = new ArrayList<Object>();
-    if(isNumber(data[2])){
-      if(isInt(data[2])){
-        // int
-        System.out.println("int");
-        chat.add(Integer.parseInt(data[2]));
-      }else{
-        // float
-        System.out.println("float");
-        chat.add(Float.parseFloat(data[2]));
-      }
-    }else{
-      // String
-      System.out.println("String");
-      chat.add(data[2]);
-    }
 
+    for(String one_msg : msg_data){
+  
+      if(isNumber(one_msg)){
+        if(isInt(one_msg)){
+          // int
+          System.out.println("int");
+          chat.add(Integer.parseInt(one_msg));
+        }else{
+          // float
+          System.out.println("float");
+          chat.add(Float.parseFloat(one_msg));
+        }
+      }else{
+        // String
+        System.out.println("String");
+        chat.add(one_msg);
+      }
+    }
+  
     OSCMessage msg = new OSCMessage(data[1], chat);
     try{
       sender.send(msg);
       for(Object ob : msg.getArguments()){
         try{
-          //session.getBasicRemote().sendText("Send: " + msg.getAddress() + ": " + (String) ob);
           session.getBasicRemote().sendText("Send: " + msg.getAddress() + ": " + ob);
         }catch(Exception e){
           e.printStackTrace();
