@@ -86,13 +86,11 @@ public class OSCReceiver{
 
   // 受信を終了するためのメソッド
   public void stopReceive(Session session){
-    receiver.stopListening();
-    receiver.close();
     try{
       session.getBasicRemote().sendText("Shut down receiver");
-    }catch(Exception e){
-      e.printStackTrace();
-    }
+    }catch(Exception e){}
+    receiver.stopListening();
+    receiver.close();
     isRun = false;
   }
 }
